@@ -1,0 +1,202 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Processus API
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  
+  /workflow:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: processus
+    get:
+      description: Gets the requested workflow
+      operationId: get
+      
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: uuid
+          required: true
+          type: string
+          description: The uuid of the workflow to get
+        - in: query
+          name: rewind
+          required: false
+          type: integer
+          description: The rewind in history value in reverse chronological order. i.e. 0 (default) is latest.
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/WorkflowResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Deletes the requested workflow and it's associated history
+      operationId: del
+      
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: uuid
+          required: true
+          type: string
+          description: The uuid of the workflow to delete
+
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: object
+          
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Executes the supplied workflow in processus
+      # used as the method name of the controller
+      operationId: execute
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: workflow
+          description: The workflow definition you wish to execute
+          required: true
+          schema:
+            $ref: '#/definitions/Workflow'
+          
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/WorkflowResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          
+    patch:
+      description: Executes the supplied workflow in processus
+      # used as the method name of the controller
+      operationId: update
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: uuid
+          required: true
+          type: string
+          description: The id of the workflow to update
+        - in: body
+          name: task
+          description: The task to update the workflow with
+          required: true
+          schema:
+            $ref: '#/definitions/Task'
+          
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/WorkflowResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+# complex objects have schema definitions
+definitions:
+  Task:
+    type: object
+    properties:
+      description:
+        type: string
+      blocking:
+        type: boolean
+      handler:
+        type: string
+      parameters:
+        type: object
+      status:
+        type: string
+      timeOpened:
+        type: integer
+        format: int64
+      timeStarted:
+        type: integer
+        format: int64
+      handlerExecuted:
+        type: boolean
+      timeCompleted: 
+        type: integer
+        format: int64
+      handlerDuration:
+        type: integer
+        format: int64
+      totalDuration:
+        type: integer
+        format: int64
+        
+  Workflow:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      tasks:
+        $ref: '#/definitions/Task'
+      
+        
+  WorkflowResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      tasks:
+        $ref: '#/definitions/Task'
+      status:
+        type: string
+      
+  
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string

@@ -2,6 +2,9 @@
 
 An API for [Processus](https://github.com/cloudb2/processus)
 
+[![NPM version](https://img.shields.io/npm/v/processus-api.svg?style=flat-square)](https://www.npmjs.com/package/processus)
+[![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/cloudb2/processus/blob/master/LICENSE)
+
 ## Installation
 
 ### NPM

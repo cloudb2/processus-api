@@ -1,16 +1,20 @@
 {
   "name": "processus-api",
-  "version": "0.0.1",
-  "private": true,
-  "description": "New Swagger API Project",
-  "keywords": ["workflow",
+  "version": "0.0.4",
+  "description": "A REST API for Processus",
+  "keywords": [
+    "workflow",
     "bpm",
     "task",
     "execution",
     "processus",
-    "processus-api"],
-  "author": "",
-  "license": "",
+    "processus-api"
+  ],
+  "author": {
+    "name": "Jason",
+    "email": "jason@cloudb2.com"
+  },
+  "license": "MPL",
   "main": "app.js",
   "dependencies": {
     "express": "^4.12.3",
